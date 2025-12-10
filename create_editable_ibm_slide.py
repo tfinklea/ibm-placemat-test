@@ -2,13 +2,18 @@ import pptx
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN, MSO_ANCHOR, MSO_TEXT_ORIENTATION
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 
 # --- CONFIGURATION ---
 SLIDE_WIDTH = Inches(22)
 SLIDE_HEIGHT = Inches(13)
 FONT_NAME = "Arial"
+
+# --- MANUAL CONSTANTS (Fix for ImportError) ---
+# We define these manually to avoid the import error you received
+MSO_TEXT_ORIENTATION_HORIZONTAL = 1
+MSO_TEXT_ORIENTATION_UPWARD = 2
 
 # --- COLORS ---
 C_BLUE_DARK = RGBColor(0, 32, 96)       # Deep Blue (Security, Data Headers)
@@ -31,7 +36,7 @@ C_ELA_STAR = RGBColor(217, 217, 217)
 
 def create_box(slide, x, y, w, h, text, bg_color, font_color=C_BLACK, 
                bold=False, font_size=9, outline_color=None, align=PP_ALIGN.CENTER, 
-               orientation=MSO_TEXT_ORIENTATION.HORIZONTAL):
+               orientation=MSO_TEXT_ORIENTATION_HORIZONTAL):
     shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, h)
     shape.fill.solid()
     shape.fill.fore_color.rgb = bg_color
@@ -48,6 +53,8 @@ def create_box(slide, x, y, w, h, text, bg_color, font_color=C_BLACK,
     tf.margin_left = Pt(2)
     tf.margin_right = Pt(2)
     tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    
+    # Apply text orientation using the manual constant
     tf.orientation = orientation
     
     p = tf.paragraphs[0]
@@ -120,7 +127,7 @@ X_CENTER = X_SEC + SEC_W + GAP
 X_RIGHT = X_CENTER + CENTER_W + GAP
 
 # --- 2. FAR LEFT: CLIENT ENGINEERING ---
-ce_box = create_box(slide, X_CE, TOP_Y + Inches(0.4), CE_W, Inches(8.5), "IBM Client Engineering (CE)", C_WHITE, outline_color=C_BLACK, bold=True, orientation=MSO_TEXT_ORIENTATION.UPWARD)
+ce_box = create_box(slide, X_CE, TOP_Y + Inches(0.4), CE_W, Inches(8.5), "IBM Client Engineering (CE)", C_WHITE, outline_color=C_BLACK, bold=True, orientation=MSO_TEXT_ORIENTATION_UPWARD)
 
 # --- 3. LEFT COLUMN: SECURITY ---
 # Security Header
